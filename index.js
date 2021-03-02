@@ -36,7 +36,7 @@ function onHealthCheck() {
 }
 
 createTerminus(server, {
-    signal: 'SIGINT',
+    signal: 'SIGTERM',
     healthChecks: { '/healthcheck': onHealthCheck },
     timeout: appConfig.shutdownTimeout,
     onSignal,
