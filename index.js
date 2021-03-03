@@ -2,6 +2,7 @@ require('console-stamp')(console, '[HH:MM:ss.l]');
 const http = require('http')
 const express = require('express')
 const { createTerminus } = require('@godaddy/terminus')
+const stoppable = require('stoppable');
 
 const appConfig = {
     port: process.env.PORT || 3000,
@@ -15,11 +16,13 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-const server = http.createServer(app)
+const server = stoppable(http.createServer(app))
 
 function onSignal() {
     console.log('server is starting cleanup')
-    return Promise.all([]);
+    return Promise.all([
+        new Promise((resolve, reject) => server.close(resolve))
+    ]);
 }
 
 function beforeShutdown() {
